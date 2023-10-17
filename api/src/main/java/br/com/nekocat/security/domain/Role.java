@@ -1,5 +1,6 @@
 package br.com.nekocat.security.domain;
 
+import br.com.nekocat.security.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,5 +23,5 @@ public class Role {
 
     @ManyToOne
     @JoinColumn(name = "id_user")
-    private User usuario;
+    private User user;
 }

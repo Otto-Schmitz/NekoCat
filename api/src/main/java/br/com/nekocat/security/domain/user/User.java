@@ -1,5 +1,6 @@
-package br.com.nekocat.security.domain;
+package br.com.nekocat.security.domain.user;
 
+import br.com.nekocat.security.domain.Role;
 import lombok.*;
 
 import javax.persistence.*;
