@@ -14,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter @Setter
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
-public class User {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
