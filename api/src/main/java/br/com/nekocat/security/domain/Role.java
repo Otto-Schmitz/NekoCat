@@ -1,11 +1,11 @@
 package br.com.nekocat.security.domain;
 
 import br.com.nekocat.security.domain.user.Users;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Builder
@@ -13,7 +13,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @Getter @Setter
 @EqualsAndHashCode(of = "id") @ToString(of = "id")
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -24,4 +24,9 @@ public class Role {
     @ManyToOne
     @JoinColumn(name = "id_user")
     private Users user;
+
+    @Override
+    public String getAuthority() {
+        return getName();
+    }
 }

@@ -1,14 +1,16 @@
 package br.com.nekocat.security.domain.user;
 
 import br.com.nekocat.security.domain.Role;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter @Setter
@@ -32,4 +34,8 @@ public class Users {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
 }

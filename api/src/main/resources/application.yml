@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:postgresql://localhost:5432/nekocat
+        url: jdbc:postgresql://localhost:5432/nekocat2
         username: nekocat
         password: nekocat
     jpa:

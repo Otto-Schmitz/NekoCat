@@ -18,7 +18,7 @@ public class UserController {
     private UserInterface userInterface;
 
     @GetMapping("/all")
-    private ResponseEntity<List<UserResponse>> getALl() {
+    private ResponseEntity<List<UserResponse>> getAll() {
         return ResponseEntity.ok(userInterface.getAll());
     }
 }
