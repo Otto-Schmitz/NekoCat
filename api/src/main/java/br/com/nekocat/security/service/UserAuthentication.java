@@ -1,7 +1,7 @@
 package br.com.nekocat.security.service;
 
 import br.com.nekocat.security.domain.user.Users;
-import br.com.nekocat.security.domain.user.contract.UserAuthenticationInterface;
+import br.com.nekocat.security.contract.user.UserAuthenticationInterface;
 import br.com.nekocat.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

@@ -1,6 +1,6 @@
 package br.com.nekocat.security.controller;
 
-import br.com.nekocat.security.domain.user.contract.AccountInterface;
+import br.com.nekocat.security.contract.auth.AuthInterface;
 import br.com.nekocat.security.domain.user.request.LoginRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -16,9 +16,9 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
-    private AccountInterface accountInterface;
+    private AuthInterface accountInterface;
 
-    private Logger log = LoggerFactory.getLogger(AuthController.class);
+    private final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request, @RequestHeader Map<String, String> headers) {

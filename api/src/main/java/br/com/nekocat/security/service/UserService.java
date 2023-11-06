@@ -1,7 +1,7 @@
 package br.com.nekocat.security.service;
 
 import br.com.nekocat.security.domain.user.Users;
-import br.com.nekocat.security.domain.user.contract.UserInterface;
+import br.com.nekocat.security.contract.user.UserInterface;
 import br.com.nekocat.security.domain.user.mapper.UserMapper;
 import br.com.nekocat.security.repository.UserRepository;
 import br.com.nekocat.security.domain.user.response.UserResponse;
@@ -20,6 +20,11 @@ public class UserService implements UserInterface {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Override
+    public void save(Users user) {
+        userRepository.save(user);
+    }
 
     @Override
     public List<UserResponse> getAll() {

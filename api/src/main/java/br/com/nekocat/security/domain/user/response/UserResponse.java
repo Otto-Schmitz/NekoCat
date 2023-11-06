@@ -11,6 +11,6 @@ import java.util.List;
 public class UserResponse {
     private Long id;
     private String userName;
-    private String profilePic;
+    private byte[] profilePic;
     private List<Role> roles;
 }

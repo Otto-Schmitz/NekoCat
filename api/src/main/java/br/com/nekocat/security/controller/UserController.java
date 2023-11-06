@@ -1,6 +1,6 @@
 package br.com.nekocat.security.controller;
 
-import br.com.nekocat.security.domain.user.contract.UserInterface;
+import br.com.nekocat.security.contract.user.UserInterface;
 import br.com.nekocat.security.domain.user.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -14,6 +14,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 public class Users {
@@ -26,8 +29,11 @@ public class Users {
     private String userName;
     private String email;
     private String password;
-    private String profilePic;
+//    private String profilePic;
     private LocalDate dateBirth;
+
+    @Lob
+    private byte[] profilePic;
 
     @Builder.Default
     private boolean active = true;

@@ -1,4 +1,4 @@
-package br.com.nekocat.security.domain.user.contract;
+package br.com.nekocat.security.contract.user;
 
 import br.com.nekocat.security.domain.user.Users;
 
