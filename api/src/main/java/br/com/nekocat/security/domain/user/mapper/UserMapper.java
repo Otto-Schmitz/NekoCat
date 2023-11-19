@@ -5,6 +5,8 @@ import br.com.nekocat.security.domain.user.Users;
 import br.com.nekocat.security.domain.user.request.RegisterRequest;
 import br.com.nekocat.security.domain.user.response.TokenDto;
 import br.com.nekocat.security.domain.user.response.UserResponse;
+import org.springframework.context.annotation.Description;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -37,7 +39,12 @@ public class UserMapper {
                 .email(dto.getEmail())
                 .dateBirth(dto.getBirthDate())
                 .password(encrypted)
-                .profilePic(dto.getPicFile().getBytes())
+                .profilePic(fileConverter(dto.getPicFile()))
                 .build();
+    }
+
+    @Description("create a FileMapper and change this method location")
+    private static byte[] fileConverter(MultipartFile file) throws IOException {
+        return file.getBytes();
     }
 }

@@ -27,9 +27,9 @@ public class Users {
 
     private String name;
     private String userName;
+    @Column(unique = true)
     private String email;
     private String password;
-//    private String profilePic;
     private LocalDate dateBirth;
 
     @Lob

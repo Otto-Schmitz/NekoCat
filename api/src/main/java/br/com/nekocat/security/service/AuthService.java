@@ -1,26 +1,34 @@
 package br.com.nekocat.security.service;
 
+import br.com.nekocat.error.ErrorMessage;
 import br.com.nekocat.security.contract.auth.AuthInterface;
 import br.com.nekocat.security.contract.token.TokenInterface;
 import br.com.nekocat.security.contract.user.UserInterface;
+import br.com.nekocat.security.domain.Role;
 import br.com.nekocat.security.domain.user.Users;
 import br.com.nekocat.security.domain.user.mapper.UserMapper;
 import br.com.nekocat.security.domain.user.request.LoginRequest;
 import br.com.nekocat.security.domain.user.request.RegisterRequest;
+import br.com.nekocat.security.enuns.RoleType;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
 @Service
 public class AuthService implements AuthInterface {
     @Autowired
@@ -58,33 +66,34 @@ public class AuthService implements AuthInterface {
         Long id = tokenInterface.getUserId(token);
         Users user = userInterface.getById(id);
 
-        return ResponseEntity.ok(UserMapper.toTokenDto(
-                token, "Bearer", user
-        ));
+        return ResponseEntity.ok(UserMapper.toTokenDto(token, "Bearer", user));
     }
 
     @Override
     public ResponseEntity<?> register(RegisterRequest request) {
         try {
             return performRegister(request);
-        } catch (RuntimeException | IOException | URISyntaxException e) {
+        } catch (DataIntegrityViolationException | IOException | URISyntaxException e) {
             log.error(String.valueOf(e.fillInStackTrace()));
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return e instanceof DataIntegrityViolationException
+                    ?ResponseEntity.internalServerError().body(ErrorMessage.Text.INVALID_EMAIL)
+                    :ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
+    @Transactional
     private ResponseEntity<?> performRegister(RegisterRequest request) throws IOException, URISyntaxException {
-        Users user = UserMapper.toUser(
-                request, passwordEncoder.encode(request.getPassword())
-        );
+        Users user = UserMapper.toUser(request, passwordEncoder.encode(request.getPassword()));
+
+        Role role = Role.builder()
+                .name(RoleType.USER.getRole())
+                .user(user)
+                .build();
+
+        user.setRoles(Arrays.stream(new Role[]{role}).toList());
+
         userInterface.save(user);
 
-        return ResponseEntity.created(
-                uriBuilder.path("/auth/register")
-                        .build()
-                        .toURL()
-                        .toURI()
-        )
-                .body(UserMapper.toDto(user));
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
     }
 }
