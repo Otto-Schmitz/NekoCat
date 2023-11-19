@@ -4,12 +4,11 @@ import br.com.nekocat.error.ErrorMessage;
 import br.com.nekocat.security.contract.auth.AuthInterface;
 import br.com.nekocat.security.contract.token.TokenInterface;
 import br.com.nekocat.security.contract.user.UserInterface;
-import br.com.nekocat.security.domain.Role;
+import br.com.nekocat.security.domain.role.mapper.RoleMapper;
 import br.com.nekocat.security.domain.user.Users;
 import br.com.nekocat.security.domain.user.mapper.UserMapper;
 import br.com.nekocat.security.domain.user.request.LoginRequest;
 import br.com.nekocat.security.domain.user.request.RegisterRequest;
-import br.com.nekocat.security.enuns.RoleType;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,7 +24,6 @@ import org.springframework.web.util.UriBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -84,13 +82,7 @@ public class AuthService implements AuthInterface {
     @Transactional
     private ResponseEntity<?> performRegister(RegisterRequest request) throws IOException, URISyntaxException {
         Users user = UserMapper.toUser(request, passwordEncoder.encode(request.getPassword()));
-
-        Role role = Role.builder()
-                .name(RoleType.USER.getRole())
-                .user(user)
-                .build();
-
-        user.setRoles(Arrays.stream(new Role[]{role}).toList());
+        user.setRoles(RoleMapper.defaultRoleList(user));
 
         userInterface.save(user);
 

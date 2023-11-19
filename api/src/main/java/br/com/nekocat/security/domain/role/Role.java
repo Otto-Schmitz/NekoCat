@@ -1,4 +1,4 @@
-package br.com.nekocat.security.domain;
+package br.com.nekocat.security.domain.role;
 
 import br.com.nekocat.security.domain.user.Users;
 import jakarta.persistence.*;

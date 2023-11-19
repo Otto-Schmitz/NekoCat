@@ -1,6 +1,6 @@
 package br.com.nekocat.security.domain.user;
 
-import br.com.nekocat.security.domain.Role;
+import br.com.nekocat.security.domain.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

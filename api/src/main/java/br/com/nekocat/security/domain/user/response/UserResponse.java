@@ -1,6 +1,6 @@
 package br.com.nekocat.security.domain.user.response;
 
-import br.com.nekocat.security.domain.Role;
+import br.com.nekocat.security.domain.role.Role;
 import lombok.Builder;
 import lombok.Data;
 
