@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import static br.com.nekocat.error.ErrorMessage.USER_NOT_AUTHENTICATED;
+import static br.com.nekocat.security.error.ErrorMessage.USER_NOT_AUTHENTICATED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Service

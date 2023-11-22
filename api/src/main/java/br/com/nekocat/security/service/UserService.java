@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static br.com.nekocat.error.ErrorMessage.USER_NOT_FOUND;
+import static br.com.nekocat.security.error.ErrorMessage.USER_NOT_FOUND;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Service

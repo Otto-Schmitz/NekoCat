@@ -1,4 +1,4 @@
-package br.com.nekocat.error;
+package br.com.nekocat.security.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

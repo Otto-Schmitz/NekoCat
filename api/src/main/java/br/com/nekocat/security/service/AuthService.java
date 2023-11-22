@@ -1,7 +1,7 @@
 package br.com.nekocat.security.service;
 
-import br.com.nekocat.error.ErrorMessage;
 import br.com.nekocat.security.contract.auth.AuthInterface;
+import br.com.nekocat.security.contract.response.ResponseInterface;
 import br.com.nekocat.security.contract.token.TokenInterface;
 import br.com.nekocat.security.contract.user.UserAuthenticationInterface;
 import br.com.nekocat.security.contract.user.UserInterface;
@@ -10,10 +10,10 @@ import br.com.nekocat.security.domain.user.Users;
 import br.com.nekocat.security.domain.user.mapper.UserMapper;
 import br.com.nekocat.security.domain.user.request.AuthRequest;
 import br.com.nekocat.security.domain.user.request.RegisterRequest;
+import br.com.nekocat.security.error.ErrorMessage;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +29,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class AuthService implements AuthInterface {
+    @Autowired
+    private ResponseInterface responseInterface;
+
     @Autowired
     private UserInterface userInterface;
 
@@ -46,14 +49,13 @@ public class AuthService implements AuthInterface {
 
     private final Logger log = getLogger(AuthService.class);
 
-
     @Override
     public ResponseEntity<?> login(AuthRequest request) {
         try {
             return performLogin(request);
         } catch (RuntimeException e) {
             log.error(String.valueOf(e.fillInStackTrace()));
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return responseInterface.internalServerError(e.getMessage());
         }
     }
 
@@ -66,7 +68,7 @@ public class AuthService implements AuthInterface {
         Long id = tokenInterface.getUserId(token);
         Users user = userInterface.getById(id);
 
-        return ResponseEntity.ok(UserMapper.toTokenDto(token, "Bearer", user));
+        return responseInterface.ok(UserMapper.toTokenDto(token, "Bearer", user));
     }
 
     @Override
@@ -76,8 +78,8 @@ public class AuthService implements AuthInterface {
         } catch (DataIntegrityViolationException | IOException | URISyntaxException e) {
             log.error(String.valueOf(e.fillInStackTrace()));
             return e instanceof DataIntegrityViolationException
-                    ?ResponseEntity.internalServerError().body(ErrorMessage.Text.INVALID_EMAIL)
-                    :ResponseEntity.internalServerError().body(e.getMessage());
+                    ?responseInterface.internalServerError(ErrorMessage.Text.INVALID_EMAIL)
+                    :responseInterface.internalServerError(e.getMessage());
         }
     }
 
@@ -88,7 +90,7 @@ public class AuthService implements AuthInterface {
 
         userInterface.save(user);
 
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
+        return responseInterface.created();
     }
 
     @Override
@@ -97,7 +99,7 @@ public class AuthService implements AuthInterface {
             return performDelete();
         } catch (RuntimeException e) {
             log.error(String.valueOf(e.fillInStackTrace()));
-            return ResponseEntity.badRequest().body(ErrorMessage.Text.USER_NOT_AUTHENTICATED);
+            return responseInterface.badRequest(ErrorMessage.Text.USER_NOT_AUTHENTICATED);
         }
     }
 
@@ -105,6 +107,6 @@ public class AuthService implements AuthInterface {
     private ResponseEntity<?> performDelete() {
         userInterface.delete(userAuthenticationInterface.get());
 
-        return ResponseEntity.ok().build();
+        return responseInterface.ok();
     }
 }

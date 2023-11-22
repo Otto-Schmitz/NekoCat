@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
-import static br.com.nekocat.error.ErrorMessage.Text.*;
+import static br.com.nekocat.security.error.ErrorMessage.Text.*;
 
 @Data
 public class RegisterRequest {
