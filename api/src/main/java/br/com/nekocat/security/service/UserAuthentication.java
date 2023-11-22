@@ -17,12 +17,6 @@ public class UserAuthentication implements UserAuthenticationInterface {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private AuthenticationManager authManager;
-
-//    @Autowired
-//    private TokenService tokenService;
-
     public Long getId() {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
@@ -36,22 +30,4 @@ public class UserAuthentication implements UserAuthenticationInterface {
         return userRepository.findById(getId())
                 .orElseThrow(() -> new ResponseStatusException(INTERNAL_SERVER_ERROR, USER_NOT_AUTHENTICATED.getMessage()));
     }
-
-//    @Override
-//    public Users getByToken(UsernamePasswordAuthenticationToken data) {
-//        Authentication authentication = authManager.authenticate(data);
-//        String token = tokenService.generateToken(authentication);
-//        Long id = tokenService.getUserId(token);
-//
-//        return userRepository.findById(id)
-//                .orElseThrow(() -> new ResponseStatusException(INTERNAL_SERVER_ERROR, USER_NOT_AUTHENTICATED.getMessage()));
-//        return null;
-//    }
-
-//    public Long getId(UsernamePasswordAuthenticationToken data) {
-//        Authentication authentication = authManager.authenticate(data);
-//        Users user = (Users) authentication.getPrincipal();
-//
-//        return user.getId();
-//    }
 }

@@ -1,10 +1,10 @@
 package br.com.nekocat.security.service;
 
-import br.com.nekocat.security.domain.user.Users;
 import br.com.nekocat.security.contract.user.UserInterface;
+import br.com.nekocat.security.domain.user.Users;
 import br.com.nekocat.security.domain.user.mapper.UserMapper;
-import br.com.nekocat.security.repository.UserRepository;
 import br.com.nekocat.security.domain.user.response.UserResponse;
+import br.com.nekocat.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static br.com.nekocat.error.ErrorMessage.*;
+import static br.com.nekocat.error.ErrorMessage.USER_NOT_FOUND;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Service
@@ -24,6 +24,11 @@ public class UserService implements UserInterface {
     @Override
     public void save(Users user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public void delete(Users user) {
+        userRepository.delete(user);
     }
 
     @Override

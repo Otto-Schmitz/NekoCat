@@ -1,7 +1,7 @@
 package br.com.nekocat.security.controller;
 
 import br.com.nekocat.security.contract.auth.AuthInterface;
-import br.com.nekocat.security.domain.user.request.LoginRequest;
+import br.com.nekocat.security.domain.user.request.AuthRequest;
 import br.com.nekocat.security.domain.user.request.RegisterRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class AuthController {
     private final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request, @RequestHeader Map<String, String> headers) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest request, @RequestHeader Map<String, String> headers) {
         return authInterface.login(request);
     }
 
@@ -33,9 +33,14 @@ public class AuthController {
         return authInterface.register(request);
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete() {
+        return authInterface.delete();
+    }
+
     @PostMapping(value = "/test")
     public ResponseEntity<?> test(@RequestPart RegisterRequest request, @RequestPart MultipartFile pic) {
         System.out.println();
-        return ResponseEntity.ok("get /accounts");
+        return ResponseEntity.ok("get /auth");
     }
 }

@@ -3,11 +3,12 @@ package br.com.nekocat.security.service;
 import br.com.nekocat.error.ErrorMessage;
 import br.com.nekocat.security.contract.auth.AuthInterface;
 import br.com.nekocat.security.contract.token.TokenInterface;
+import br.com.nekocat.security.contract.user.UserAuthenticationInterface;
 import br.com.nekocat.security.contract.user.UserInterface;
 import br.com.nekocat.security.domain.role.mapper.RoleMapper;
 import br.com.nekocat.security.domain.user.Users;
 import br.com.nekocat.security.domain.user.mapper.UserMapper;
-import br.com.nekocat.security.domain.user.request.LoginRequest;
+import br.com.nekocat.security.domain.user.request.AuthRequest;
 import br.com.nekocat.security.domain.user.request.RegisterRequest;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.UriBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -39,16 +39,16 @@ public class AuthService implements AuthInterface {
     private AuthenticationManager authManager;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserAuthenticationInterface userAuthenticationInterface;
 
     @Autowired
-    private UriBuilder uriBuilder;
+    private PasswordEncoder passwordEncoder;
 
     private final Logger log = getLogger(AuthService.class);
 
 
     @Override
-    public ResponseEntity<?> login(LoginRequest request) {
+    public ResponseEntity<?> login(AuthRequest request) {
         try {
             return performLogin(request);
         } catch (RuntimeException e) {
@@ -57,10 +57,12 @@ public class AuthService implements AuthInterface {
         }
     }
 
-    private ResponseEntity<?> performLogin(LoginRequest request) {
+    private ResponseEntity<?> performLogin(AuthRequest request) {
         UsernamePasswordAuthenticationToken data = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
         Authentication authentication = this.authManager.authenticate(data);
+
         String token = tokenInterface.generateToken(authentication);
+
         Long id = tokenInterface.getUserId(token);
         Users user = userInterface.getById(id);
 
@@ -87,5 +89,22 @@ public class AuthService implements AuthInterface {
         userInterface.save(user);
 
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
+    }
+
+    @Override
+    public ResponseEntity<?> delete() {
+        try {
+            return performDelete();
+        } catch (RuntimeException e) {
+            log.error(String.valueOf(e.fillInStackTrace()));
+            return ResponseEntity.badRequest().body(ErrorMessage.Text.USER_NOT_AUTHENTICATED);
+        }
+    }
+
+    @Transactional
+    private ResponseEntity<?> performDelete() {
+        userInterface.delete(userAuthenticationInterface.get());
+
+        return ResponseEntity.ok().build();
     }
 }

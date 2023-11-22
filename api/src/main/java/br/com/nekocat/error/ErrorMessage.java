@@ -18,7 +18,8 @@ public enum ErrorMessage {
     NULL_PROFILE_PIC(Text.NULL_PROFILE_PIC),
     MAXiMUM_LENGTH_USERNAME(Text.MINIMUM_LENGTH_USERNAME),
     MINIMUM_LENGTH_USERNAME(Text.MINIMUM_LENGTH_USERNAME),
-    NULL_BIRTH_DATE(Text.NULL_BIRTH_DATE);
+    NULL_BIRTH_DATE(Text.NULL_BIRTH_DATE),
+    INVALID_TOKEN(Text.INVALID_TOKEN);
 
     public static class Text {
 
@@ -58,6 +59,10 @@ public enum ErrorMessage {
         //birthdate
 
         public static final String NULL_BIRTH_DATE = "Birth Date cannot be null";
+
+        //token
+
+        public static final String INVALID_TOKEN = "Invalid token";
     }
 
     private final String message;

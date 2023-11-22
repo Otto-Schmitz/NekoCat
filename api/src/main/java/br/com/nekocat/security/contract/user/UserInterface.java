@@ -8,9 +8,13 @@ import java.util.List;
 public interface UserInterface {
     void save(Users user);
 
+    void delete(Users user);
+
     List<UserResponse> getAll();
 
     Users getById(long id);
 
     Users getByEmail(String email);
+
+
 }
